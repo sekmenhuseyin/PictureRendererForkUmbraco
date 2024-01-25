@@ -8,7 +8,7 @@ public static class UriExtensions
         {
             return string.Empty;
         }
-        
+
         var queryItems = HttpUtility.ParseQueryString(uri.Query);
 
         if (!string.IsNullOrEmpty(wantedFormat))
@@ -100,7 +100,7 @@ public static class UriExtensions
 
         return queryItems;
     }
-    
+
     internal static (string x, string y) FocalPointAsString((double x, double y) focalPoint)
     {
         var x = Math.Round(focalPoint.x, 3).ToString(CultureInfo.InvariantCulture);

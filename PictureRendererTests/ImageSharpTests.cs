@@ -60,6 +60,8 @@ public class ImageSharpTests
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
+            ImageWidth = 300,
+            ImageHeight = 300,
             AspectRatio = 1,
             ImageDecoding = ImageDecoding.Auto,
             FetchPriority = FetchPriority.None
@@ -214,7 +216,37 @@ public class ImageSharpTests
             "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&quality=80\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var result = Picture.Render(new[] { "/myImage.jpg", "/myImage2.png", "/myImage3.jpg" }, GetTestImageProfile());
+        var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.jpg"], GetTestImageProfile());
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void RenderMultiImageWithWidthAndHeightTest()
+    {
+        const string expected = "<picture>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?format=webp&width=200&height=200&quality=80\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.gif?width=100&height=100&quality=80\"/>" +
+            "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
+        "</picture>";
+        var profile = new ImageSharpProfile
+        {
+            MultiImageMediaConditions =
+            [
+                new MediaCondition("(min-width: 1200px)", 400, 400),
+                new MediaCondition("(min-width: 600px)", 200, 200),
+                new MediaCondition("(min-width: 300px)", 100, 100)
+            ],
+            ImageHeight = 400,
+            ImageWidth = 400,
+            ImgWidthHeight = false,
+            CreateWebpForFormat = [ImageFormat.Jpeg, ImageFormat.Png],
+            FetchPriority = FetchPriority.None
+        };
+        var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.gif"], profile);
 
         Assert.Equal(expected, result);
     }
@@ -231,7 +263,7 @@ public class ImageSharpTests
             "<source media=\"(min-width: 300px)\" srcset=\"/myImage2.jpg?width=100&height=100&quality=80\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"alt text\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var result = Picture.Render(new[] { "/myImage.jpg", "/myImage2.jpg" }, GetTestImageProfile(), "alt text");
+        var result = Picture.Render(["/myImage.jpg", "/myImage2.jpg"], GetTestImageProfile(), "alt text");
 
         Assert.Equal(expected, result);
     }
@@ -247,7 +279,7 @@ public class ImageSharpTests
             "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&rxy=0.3%2c0.3&quality=80\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var result = Picture.Render(new[] { "/myImage.jpg", "/myImage2.png", "/myImage3.jpg" }, GetTestImageProfile(), new[] { (0.1, 0.1), (0.2, 0.2), (0.3, 0.3) });
+        var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.jpg"], GetTestImageProfile(), new[] { (0.1, 0.1), (0.2, 0.2), (0.3, 0.3) });
 
         Assert.Equal(expected, result);
     }
@@ -263,7 +295,7 @@ public class ImageSharpTests
             "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&rxy=0.3%2c0.3&quality=80\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var result = Picture.Render(new[] { "/myImage.jpg", "/myImage2.png", "/myImage3.jpg" }, GetTestImageProfile(), new[] { (0.1, 0.1), default, (0.3, 0.3) });
+        var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.jpg"], GetTestImageProfile(), new[] { (0.1, 0.1), default, (0.3, 0.3) });
 
         Assert.Equal(expected, result);
     }
@@ -296,6 +328,74 @@ public class ImageSharpTests
         var result = Picture.Render("https://mydomain.com/myImage.jpg?quality=7", profile, "alt text");
 
         Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void RenderMethodTests()
+    {
+        var result = Picture.Render("/myImage.jpg", GetTestImageProfile(), LazyLoading.Browser);
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render(["/myImage.jpg", "/myImage2.jpg"], GetTestImageProfile(), LazyLoading.Browser);
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render("/myImage.jpg", GetTestImageProfile(), (1,5));
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render(["/myImage.jpg", "/myImage2.jpg"], GetTestImageProfile(), [(1,5), (1,5)]);
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render("/myImage.jpg", GetTestImageProfile(), "alt text", (1,5));
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render(["/myImage.jpg", "/myImage2.jpg"], GetTestImageProfile(), "alt text", [(1,5), (1,5)]);
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render("/myImage.jpg", GetTestImageProfile(), "alt text", "css");
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
+
+        result = Picture.Render(["/myImage.jpg", "/myImage2.jpg"], GetTestImageProfile(), "alt text", "css");
+        Assert.NotEmpty(result);
+        Assert.NotNull(result);
+        Assert.Contains("<picture>", result);
+        Assert.Contains("</picture>", result);
+        Assert.Contains("<source", result);
+        Assert.Contains("<img", result);
     }
 
     private static ImageSharpProfile GetTestImageProfile()
