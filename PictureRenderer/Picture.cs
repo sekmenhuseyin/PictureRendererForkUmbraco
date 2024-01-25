@@ -61,7 +61,7 @@ internal static class Picture
     /// </summary>
     /// <param name="focalPoint">Value range: 0-1 for ImageSharp, 1-[image width/height] for Storyblok.</param>
     /// <returns></returns>
-    internal static string Render(string imagePath, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y) focalPoint = default, string cssClass = "", string imgWidth = "", string style = "")
+    internal static string Render(string imagePath, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y) focalPoint = default, string cssClass = "")
     {
         var pictureData = profile.GetPictureData(imagePath, altText, focalPoint, cssClass);
            
@@ -72,8 +72,8 @@ internal static class Picture
         {
             sourceElementWebp = pictureData.RenderSourceElement(ImageFormat.Webp);
         }
-            
-        var imgElement = profile.RenderImgElement(pictureData, lazyLoading, imgWidth, style);
+
+        var imgElement = profile.RenderImgElement(pictureData, lazyLoading);
         var pictureElement = $"<picture>{sourceElementWebp}{sourceElement}{imgElement}</picture>"; //Webp source element must be rendered first. Browser selects the first version it supports.
 
         return pictureElement;
@@ -86,7 +86,8 @@ internal static class Picture
     {
         var pictureData = profile.GetMultiImagePictureData(imagePaths, altText, focalPoints, cssClass);
         var sourceElements = pictureData.RenderSourceElementsForMultiImage();
-        var imgElement = profile.RenderImgElement(pictureData, lazyLoading, string.Empty, string.Empty);
+
+        var imgElement = profile.RenderImgElement(pictureData, lazyLoading);
         var pictureElement = $"<picture>{sourceElements}{imgElement}</picture>";
 
         return pictureElement;

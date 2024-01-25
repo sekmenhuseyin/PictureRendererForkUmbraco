@@ -77,16 +77,15 @@ public static class PictureExtensions
         return pData;
     }
 
-    internal static string RenderImgElement(this PictureProfileBase profile, PictureData pictureData, LazyLoading lazyLoading, string imgWidth, string style)
+    internal static string RenderImgElement(this PictureProfileBase profile, PictureData pictureData, LazyLoading lazyLoading)
     {
-        var widthAndHeightAttributes = GetImgWidthAndHeightAttributes(profile, imgWidth);
+        var widthAndHeightAttributes = GetImgWidthAndHeightAttributes(profile);
         var loadingAttribute = lazyLoading == LazyLoading.Browser ? "loading=\"lazy\" " : string.Empty;
         var classAttribute = string.IsNullOrEmpty(pictureData.CssClass) ? string.Empty : $"class=\"{HttpUtility.HtmlEncode(pictureData.CssClass)}\"";
         var decodingAttribute = profile.ImageDecoding == ImageDecoding.None ? string.Empty : $"decoding=\"{Enum.GetName(typeof(ImageDecoding), profile.ImageDecoding)?.ToLower()}\" ";
         var fetchPriorityAttribute = profile.FetchPriority == FetchPriority.None ? string.Empty : $"fetchPriority=\"{Enum.GetName(typeof(FetchPriority), profile.FetchPriority)?.ToLower()}\" ";
-        var styleAttribute = string.IsNullOrEmpty(style) ? string.Empty : $"style=\"{style}\" ";
 
-        return $"<img src=\"{pictureData.ImgSrc}\" alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}{styleAttribute}/>";
+        return $"<img src=\"{pictureData.ImgSrc}\" alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}/>";
     }
 
     internal static NameValueCollection AddQualityQuery(this PictureProfileBase profile, NameValueCollection queryItems)
@@ -110,13 +109,8 @@ public static class PictureExtensions
         return queryItems;
     }
 
-    internal static string GetImgWidthAndHeightAttributes(this PictureProfileBase profile, string imgWidth)
+    internal static string GetImgWidthAndHeightAttributes(this PictureProfileBase profile)
     {
-        if (!string.IsNullOrEmpty(imgWidth))
-        {
-            return $"width=\"{imgWidth}\" ";
-        }
-
         if (!profile.ImgWidthHeight)
         {
             return string.Empty;

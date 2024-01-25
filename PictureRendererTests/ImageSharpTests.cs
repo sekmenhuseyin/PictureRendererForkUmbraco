@@ -49,21 +49,6 @@ public class ImageSharpTests
     }
 
     [Fact]
-    public void RenderWithStyleTest()
-    {
-        const string expected = "<picture>" +
-            "<source srcset=\"/myImage.jpg?format=webp&width=150&height=150&quality=80 150w, /myImage.jpg?format=webp&width=300&height=300&quality=80 300w\" sizes=\"150px\" type=\"image/webp\"/>" +
-            "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
-            "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"alt text\" loading=\"lazy\" decoding=\"async\" style=\"float: right;\" />" +
-        "</picture>";
-        var profile = GetTestImageProfile();
-
-        var result = Picture.Render("/myImage.jpg", profile, "alt text", style: "float: right;");
-
-        Assert.Equal(expected, result);
-    }
-
-    [Fact]
     public void RenderWithCssClassAndImageDecodingAuto()
     {
         const string expected = "<picture>" +
@@ -279,21 +264,6 @@ public class ImageSharpTests
             "<img src=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
         var result = Picture.Render(new[] { "/myImage.jpg", "/myImage2.png", "/myImage3.jpg" }, GetTestImageProfile(), new[] { (0.1, 0.1), default, (0.3, 0.3) });
-
-        Assert.Equal(expected, result);
-    }
-
-    [Fact]
-    public void RenderWithImgWidthTest()
-    {
-        const string expected = "<picture>" +
-            "<source srcset=\"/myImage.jpg?format=webp&width=150&height=150&quality=80 150w, /myImage.jpg?format=webp&width=300&height=300&quality=80 300w\" sizes=\"150px\" type=\"image/webp\"/>" +
-            "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
-            "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"alt text\" width=\"50%\" loading=\"lazy\" decoding=\"async\" />" +
-        "</picture>";
-        var profile = GetTestImageProfile();
-
-        var result = Picture.Render("/myImage.jpg", profile, "alt text", LazyLoading.Browser, default, "", "50%");
 
         Assert.Equal(expected, result);
     }
