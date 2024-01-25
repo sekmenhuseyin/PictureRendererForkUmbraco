@@ -26,8 +26,7 @@ namespace PictureRenderer
                 ImgSrc = BuildImageUrl(uri, profile, profile.FallbackWidth, string.Empty, focalPoint),
                 CssClass = cssClass,
                 SrcSet = BuildSrcSet(uri, profile, string.Empty, focalPoint),
-                SizesAttribute = string.Join(", ", profile.Sizes),
-                UniqueId = profile.ShowInfo ? Guid.NewGuid().ToString("n").Substring(0, 10) : string.Empty
+                SizesAttribute = string.Join(", ", profile.Sizes)
             };
 
             if (ShouldRenderWebp(profile, uri))
@@ -83,8 +82,7 @@ namespace PictureRenderer
                 MediaImages = mediaImagePaths,
                 AltText = altText,
                 ImgSrc = BuildImageUrl(fallbackImageUri, profile, profile.FallbackWidth, string.Empty, fallbackImageFocalPoint),
-                CssClass = cssClass,
-                UniqueId = profile.ShowInfo ? Guid.NewGuid().ToString("n").Substring(0, 10) : string.Empty
+                CssClass = cssClass
             };
 
             return pData;
@@ -92,22 +90,13 @@ namespace PictureRenderer
 
         private static string BuildImageUrl(Uri uri, PictureProfileBase profile, int imageWidth, string wantedFormat, (double x, double y) focalPoint)
         {
-            if (profile is ImageSharpProfile imageSharpProfile)
+            if (!(profile is ImageSharpProfile imageSharpProfile))
             {
-                return ImageSharpUrlBuilder.BuildImageUrl(uri, imageSharpProfile, imageWidth, wantedFormat, focalPoint);
-            }
-            
-            if (profile is StoryblokProfile storyblokProfile)
-            {
-                return StoryblokUrlBuilder.BuildStoryblokUrl(uri, storyblokProfile, imageWidth, focalPoint);
+                return string.Empty;
             }
 
-            if (profile is CloudflareProfile cloudflareProfile)
-            {
-                return CloudflareUrlBuilder.BuildCloudflareUrl(uri, cloudflareProfile, imageWidth, focalPoint);
-            }
-            
-            return string.Empty;
+            return ImageSharpUrlBuilder.BuildImageUrl(uri, imageSharpProfile, imageWidth, wantedFormat, focalPoint);
+
         }
 
         internal static (string x, string y) FocalPointAsString((double x, double y) focalPoint)

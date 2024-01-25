@@ -79,9 +79,8 @@ namespace PictureRenderer
             
             var imgElement = RenderImgElement(pictureData, profile, lazyLoading, imgWidth, style);
             var pictureElement = $"<picture>{sourceElementWebp}{sourceElement}{imgElement}</picture>"; //Webp source element must be rendered first. Browser selects the first version it supports.
-            var infoElements = RenderInfoElements(profile, pictureData);
 
-            return $"{pictureElement}{infoElements}";
+            return pictureElement;
         }
 
         /// <summary>
@@ -93,14 +92,12 @@ namespace PictureRenderer
             var sourceElements = RenderSourceElementsForMultiImage(pictureData);
             var imgElement = RenderImgElement(pictureData, profile, lazyLoading, string.Empty, string.Empty);
             var pictureElement = $"<picture>{sourceElements}{imgElement}</picture>";
-            var infoElements = RenderInfoElements(profile, pictureData);
 
-            return $"{pictureElement}{infoElements}";
+            return pictureElement;
         }
 
         private static string RenderImgElement(PictureData pictureData, PictureProfileBase profile, LazyLoading lazyLoading, string imgWidth, string style)
         {
-            var idAttribute = string.IsNullOrEmpty(pictureData.UniqueId) ? string.Empty : $" id=\"{pictureData.UniqueId}\"";
             var widthAndHeightAttributes = GetImgWidthAndHeightAttributes(profile, imgWidth);
             var loadingAttribute = lazyLoading == LazyLoading.Browser ? "loading=\"lazy\" " : string.Empty;
             var classAttribute = string.IsNullOrEmpty(pictureData.CssClass) ? string.Empty : $"class=\"{HttpUtility.HtmlEncode(pictureData.CssClass)}\"";
@@ -108,7 +105,7 @@ namespace PictureRenderer
             var fetchPriorityAttribute = profile.FetchPriority == FetchPriority.None ? string.Empty :  $"fetchPriority=\"{Enum.GetName(typeof(FetchPriority), profile.FetchPriority)?.ToLower()}\" ";
             var styleAttribute = string.IsNullOrEmpty(style) ? string.Empty : $"style=\"{style}\" ";
 
-            return $"<img{idAttribute} alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" src=\"{pictureData.ImgSrc}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}{styleAttribute}/>";
+            return $"<img alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" src=\"{pictureData.ImgSrc}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}{styleAttribute}/>";
         }
 
         private static string GetImgWidthAndHeightAttributes(PictureProfileBase profile, string imgWidth)
@@ -171,27 +168,6 @@ namespace PictureRenderer
             }
 
             return sourceElementsBuilder.ToString();
-        }
-
-        private static string RenderInfoElements(PictureProfileBase pictureProfile,  PictureData pictureData)
-        {
-            if (!pictureProfile.ShowInfo)
-            {
-                return string.Empty;
-            }
-            
-            var formatFunction = $"function format{pictureData.UniqueId}(input) {{ return input.split('/').pop().replace('?', '\\n').replaceAll('&', ', ').replace('%2c', ',').replace('rxy', 'focal point'); }}";
-            if (pictureProfile is StoryblokProfile)
-            {
-                formatFunction = $"function format{pictureData.UniqueId}(input) {{ return input.split('/m/').pop().replaceAll('/', ', '); }}";
-            }
-            if (pictureProfile is CloudflareProfile)
-            {
-                formatFunction = $"function format{pictureData.UniqueId}(input) {{ return input.split('/cdn-cgi/image/').pop().replace('/http', ', http'); }}";
-            }
-            var infoDiv = $"<div id=\"pinfo{pictureData.UniqueId}\" style=\"position: absolute; margin-top:-60px; padding:0 5px 2px 5px; font-size:0.8rem; text-align:left; background-color:rgba(255, 255, 255, 0.8);\"></div>";
-            var script =$"<script type=\"text/javascript\"> window.addEventListener(\"load\",function () {{ const pictureInfo = document.getElementById('pinfo{pictureData.UniqueId}'); var image = document.getElementById('{pictureData.UniqueId}'); pictureInfo.innerText = format{pictureData.UniqueId}(image.currentSrc); image.onload = function () {{ pictureInfo.innerText = format{pictureData.UniqueId}(image.currentSrc); }}; {formatFunction} }}, false);</script>";
-            return "\n" + infoDiv + "\n" + script;
         }
     }
 }

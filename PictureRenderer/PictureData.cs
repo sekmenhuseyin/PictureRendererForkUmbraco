@@ -11,9 +11,5 @@
         //public string ImgSrcLowQuality { get; set; }
         public string AltText { get; set; }
         public string CssClass { get; set; }
-        /// <summary>
-        /// Id used when rendering picture info.
-        /// </summary>
-        public string UniqueId { get; set; }
     }
 }
