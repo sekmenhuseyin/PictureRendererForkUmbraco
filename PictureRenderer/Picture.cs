@@ -1,12 +1,10 @@
-﻿
-// ReSharper disable UnusedType.Global
+﻿// ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
-
 namespace PictureRenderer;
 
-public static class Picture
+internal static class Picture
 {
-    public static string Render(string imagePath, PictureProfileBase profile, LazyLoading lazyLoading)
+    internal static string Render(string imagePath, PictureProfileBase profile, LazyLoading lazyLoading)
     {
         return Render(imagePath, profile, string.Empty, lazyLoading);
     }
@@ -14,12 +12,12 @@ public static class Picture
     /// <summary>
     /// Render different images in the same picture element.
     /// </summary>
-    public static string Render(string[] imagePaths, PictureProfileBase profile, LazyLoading lazyLoading)
+    internal static string Render(string[] imagePaths, PictureProfileBase profile, LazyLoading lazyLoading)
     {
         return Render(imagePaths, profile, string.Empty, lazyLoading);
     }
 
-    public static string Render(string imagePath, PictureProfileBase profile, (double x, double y) focalPoint)
+    internal static string Render(string imagePath, PictureProfileBase profile, (double x, double y) focalPoint)
     {
         return Render(imagePath, profile, string.Empty, LazyLoading.Browser, focalPoint);
     }
@@ -27,12 +25,12 @@ public static class Picture
     /// <summary>
     /// Render different images in the same picture element.
     /// </summary>
-    public static string Render(string[] imagePaths, PictureProfileBase profile, (double x, double y)[] focalPoints)
+    internal static string Render(string[] imagePaths, PictureProfileBase profile, (double x, double y)[] focalPoints)
     {
         return Render(imagePaths, profile, string.Empty, LazyLoading.Browser, focalPoints);
     }
 
-    public static string Render(string imagePath, PictureProfileBase profile, string altText, (double x, double y) focalPoints)
+    internal static string Render(string imagePath, PictureProfileBase profile, string altText, (double x, double y) focalPoints)
     {
         return Render(imagePath, profile, altText, LazyLoading.Browser, focalPoints);
     }
@@ -40,12 +38,12 @@ public static class Picture
     /// <summary>
     /// Render different images in the same picture element.
     /// </summary>
-    public static string Render(string[] imagePaths, PictureProfileBase profile, string altText, (double x, double y)[] focalPoints)
+    internal static string Render(string[] imagePaths, PictureProfileBase profile, string altText, (double x, double y)[] focalPoints)
     {
         return Render(imagePaths, profile, altText, LazyLoading.Browser, focalPoints);
     }
 
-    public static string Render(string imagePath, PictureProfileBase profile, string altText, string cssClass)
+    internal static string Render(string imagePath, PictureProfileBase profile, string altText, string cssClass)
     {
         return Render(imagePath, profile, altText, LazyLoading.Browser, cssClass: cssClass);
     }
@@ -53,7 +51,7 @@ public static class Picture
     /// <summary>
     /// Render different images in the same picture element.
     /// </summary>
-    public static string Render(string[] imagePaths, PictureProfileBase profile, string altText, string cssClass)
+    internal static string Render(string[] imagePaths, PictureProfileBase profile, string altText, string cssClass)
     {
         return Render(imagePaths, profile, altText, LazyLoading.Browser, focalPoints: default, cssClass: cssClass);
     }
@@ -63,9 +61,9 @@ public static class Picture
     /// </summary>
     /// <param name="focalPoint">Value range: 0-1 for ImageSharp, 1-[image width/height] for Storyblok.</param>
     /// <returns></returns>
-    public static string Render(string imagePath, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y) focalPoint = default, string cssClass = "", string imgWidth = "", string style = "")
+    internal static string Render(string imagePath, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y) focalPoint = default, string cssClass = "", string imgWidth = "", string style = "")
     {
-        var pictureData = PictureUtils.GetPictureData(imagePath, profile, altText, focalPoint, cssClass);
+        var pictureData = profile.GetPictureData(imagePath, altText, focalPoint, cssClass);
            
         var sourceElement = RenderSourceElement(pictureData);
 
@@ -84,9 +82,9 @@ public static class Picture
     /// <summary>
     /// Render different images in the same picture element.
     /// </summary>
-    public static string Render(string[] imagePaths, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y)[] focalPoints = null, string cssClass = "")
+    internal static string Render(string[] imagePaths, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y)[] focalPoints = null, string cssClass = "")
     {
-        var pictureData = PictureUtils.GetMultiImagePictureData(imagePaths, profile, altText, focalPoints, cssClass);
+        var pictureData = profile.GetMultiImagePictureData(imagePaths, altText, focalPoints, cssClass);
         var sourceElements = RenderSourceElementsForMultiImage(pictureData);
         var imgElement = RenderImgElement(pictureData, profile, lazyLoading, string.Empty, string.Empty);
         var pictureElement = $"<picture>{sourceElements}{imgElement}</picture>";
@@ -94,7 +92,7 @@ public static class Picture
         return pictureElement;
     }
 
-    private static string RenderImgElement(PictureData pictureData, PictureProfileBase profile, LazyLoading lazyLoading, string imgWidth, string style)
+    internal static string RenderImgElement(PictureData pictureData, PictureProfileBase profile, LazyLoading lazyLoading, string imgWidth, string style)
     {
         var widthAndHeightAttributes = GetImgWidthAndHeightAttributes(profile, imgWidth);
         var loadingAttribute = lazyLoading == LazyLoading.Browser ? "loading=\"lazy\" " : string.Empty;
@@ -106,7 +104,7 @@ public static class Picture
         return $"<img alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" src=\"{pictureData.ImgSrc}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}{styleAttribute}/>";
     }
 
-    private static string GetImgWidthAndHeightAttributes(PictureProfileBase profile, string imgWidth)
+    internal static string GetImgWidthAndHeightAttributes(PictureProfileBase profile, string imgWidth)
     {
         if (!string.IsNullOrEmpty(imgWidth))
         {
@@ -131,7 +129,7 @@ public static class Picture
         return string.Empty;
     }
 
-    private static string RenderSourceElement(PictureData pictureData, string format = "")
+    internal static string RenderSourceElement(PictureData pictureData, string format = "")
     {
         var srcSet = pictureData.SrcSet;
         var formatAttribute = string.Empty;
@@ -146,7 +144,7 @@ public static class Picture
         return $"<source {srcSetAttribute} {sizesAttribute} {formatAttribute}/>";
     }
 
-    private static string RenderSourceElementsForMultiImage(MediaImagesPictureData pictureData)
+    internal static string RenderSourceElementsForMultiImage(MediaImagesPictureData pictureData)
     {
         var sourceElementsBuilder = new StringBuilder();
         foreach (var mediaImage in pictureData.MediaImages)

@@ -9,16 +9,6 @@ namespace PictureRenderer;
 
 public static class UmbracoPicture
 {
-    public static HtmlString Picture(this IHtmlHelper helper, MediaWithCrops mediaWithCrops, PictureProfileBase profile, LazyLoading lazyLoading, string cssClass = "")
-    {
-        return Picture(helper, mediaWithCrops, profile, string.Empty, lazyLoading, cssClass);
-    }
-
-    public static HtmlString Picture(this IHtmlHelper helper, MediaWithCrops mediaWithCrops, PictureProfileBase profile, string altText, string cssClass)
-    {
-        return Picture(helper, mediaWithCrops, profile, altText, LazyLoading.Browser, cssClass);
-    }
-
     public static HtmlString Picture(this IHtmlHelper helper, MediaWithCrops? mediaWithCrops, PictureProfileBase profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, string cssClass = "")
     {
         if (mediaWithCrops == null)

@@ -1,6 +1,4 @@
-﻿using System.Web;
-
-namespace PictureRenderer.Tests;
+﻿namespace PictureRenderer.Tests;
 
 public class UriExtensionTests
 {

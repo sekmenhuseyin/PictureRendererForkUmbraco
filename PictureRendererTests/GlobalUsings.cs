@@ -1,6 +1,9 @@
+global using System.Web;
 global using Microsoft.AspNetCore.Mvc.Rendering;
 global using NSubstitute;
 global using PictureRenderer.Helpers;
 global using PictureRenderer.Profiles;
 global using Umbraco.Cms.Core.Models;
+global using Umbraco.Cms.Core.Models.PublishedContent;
+global using Umbraco.Cms.Core.PropertyEditors.ValueConverters;
 global using Xunit;

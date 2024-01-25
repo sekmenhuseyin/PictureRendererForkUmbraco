@@ -1,7 +1,4 @@
-﻿using Umbraco.Cms.Core.Models.PublishedContent;
-using Umbraco.Cms.Core.PropertyEditors.ValueConverters;
-
-namespace PictureRenderer.Tests;
+﻿namespace PictureRenderer.Tests;
 
 public class UmbracoPictureTests
 {
@@ -36,40 +33,6 @@ public class UmbracoPictureTests
 
         // Act
         var result = helper.Picture(mediaWithCrops, profile, altText, lazyLoading, cssClass);
-
-        // Assert
-        Assert.Equal(string.Empty, result.ToString());
-    }
-
-    [Fact]
-    public void Picture_WithMediaWithCropsAndAltText_ReturnsPicture()
-    {
-        // Arrange
-        var helper = Substitute.For<IHtmlHelper>();
-        var mediaWithCrops = GetMediaWithCrops();
-        var lazyLoading = LazyLoading.Browser;
-        var cssClass = string.Empty;
-        var profile = new ImageSharpProfile();
-
-        // Act
-        var result = helper.Picture(mediaWithCrops, profile, lazyLoading, cssClass);
-
-        // Assert
-        Assert.Equal(string.Empty, result.ToString());
-    }
-
-    [Fact]
-    public void Picture_WithMediaWithCropsAndAltTextAndCssClass_ReturnsPicture()
-    {
-        // Arrange
-        var helper = Substitute.For<IHtmlHelper>();
-        var mediaWithCrops = GetMediaWithCrops();
-        var altText = string.Empty;
-        var cssClass = "css-class";
-        var profile = new ImageSharpProfile();
-
-        // Act
-        var result = helper.Picture(mediaWithCrops, profile, altText, cssClass);
 
         // Assert
         Assert.Equal(string.Empty, result.ToString());
