@@ -40,10 +40,19 @@ public static class UmbracoPicture
             focalPoint.y = decimal.ToDouble(imageCropper.FocalPoint.Top);
         }
 
-        var imageSources = profile.MultiImageMediaConditions.Select(_ => imageCropper.Src!).ToArray();
-        var focalPoints = profile.MultiImageMediaConditions.Select(_ => focalPoint).ToArray();
+        string pictureData;
+        if (profile.MultiImageMediaConditions.Length == 1)
+        {
+            pictureData = PictureRenderer.Picture.Render(imageCropper.Src, profile, altText, lazyLoading, focalPoint, cssClass);
+        }
+        else
+        {
+            var imageSources = profile.MultiImageMediaConditions.Select(_ => imageCropper.Src!).ToArray();
+            var focalPoints = profile.MultiImageMediaConditions.Select(_ => focalPoint).ToArray();
 
-        var pictureData = PictureRenderer.Picture.Render(imageSources, profile, altText, lazyLoading, focalPoints, cssClass);
+            pictureData = PictureRenderer.Picture.Render(imageSources, profile, altText, lazyLoading, focalPoints, cssClass);
+        }
+
         return new HtmlString(pictureData);
     }
 }

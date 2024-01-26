@@ -26,11 +26,11 @@ public class ImageSharpTests
     public void RenderMultiImageTest()
     {
         const string expected = "<picture>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?format=webp&width=100&height=100&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&quality=80\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80, /myImage.jpg?format=webp&width=800&height=800&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80, /myImage.jpg?width=800&height=800&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80, /myImage2.png?width=400&height=400&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?format=webp&width=100&height=100&quality=80, /myImage3.jpg?format=webp&width=200&height=200&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&quality=80, /myImage3.jpg?width=200&height=200&quality=80 2x\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"\" width=\"400\" height=\"400\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
         var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.jpg"], GetTestImageProfile());
@@ -42,11 +42,12 @@ public class ImageSharpTests
     public void RenderMultiImageWithWidthAndHeightTest()
     {
         const string expected = "<picture>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?format=webp&width=200&height=200&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.gif?width=100&height=100&quality=80\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80, /myImage.jpg?format=webp&width=800&height=800&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80, /myImage.jpg?width=800&height=800&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?format=webp&width=200&height=200&quality=80, /myImage2.png?format=webp&width=400&height=400&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80, /myImage2.png?width=400&height=400&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.gif?width=100&height=100&quality=80, /myImage3.gif?width=200&height=200&quality=80 2x\"/>" +
+
             "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"\" width=\"400\" height=\"400\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
         var profile = Constants.Profile with
@@ -62,12 +63,12 @@ public class ImageSharpTests
     public void RenderMultiImageMissingImageTest()
     {
         const string expected = "<picture>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.jpg?format=webp&width=200&height=200&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.jpg?width=200&height=200&quality=80\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage2.jpg?format=webp&width=100&height=100&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage2.jpg?width=100&height=100&quality=80\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80, /myImage.jpg?format=webp&width=800&height=800&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&quality=80, /myImage.jpg?width=800&height=800&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.jpg?format=webp&width=200&height=200&quality=80, /myImage2.jpg?format=webp&width=400&height=400&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.jpg?width=200&height=200&quality=80, /myImage2.jpg?width=400&height=400&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage2.jpg?format=webp&width=100&height=100&quality=80, /myImage2.jpg?format=webp&width=200&height=200&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage2.jpg?width=100&height=100&quality=80, /myImage2.jpg?width=200&height=200&quality=80 2x\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"alt text\" width=\"400\" height=\"400\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
         var result = Picture.Render(["/myImage.jpg", "/myImage2.jpg"], GetTestImageProfile(), "alt text");
@@ -79,11 +80,11 @@ public class ImageSharpTests
     public void RenderMultiImageWithFocalPointsTest()
     {
         const string expected = "<picture>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&rxy=0.1%2c0.1&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&rxy=0.2%2c0.2&quality=80\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?format=webp&width=100&height=100&rxy=0.3%2c0.3&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&rxy=0.3%2c0.3&quality=80\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&rxy=0.1%2c0.1&quality=80, /myImage.jpg?format=webp&width=800&height=800&rxy=0.1%2c0.1&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80, /myImage.jpg?width=800&height=800&rxy=0.1%2c0.1&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&rxy=0.2%2c0.2&quality=80, /myImage2.png?width=400&height=400&rxy=0.2%2c0.2&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?format=webp&width=100&height=100&rxy=0.3%2c0.3&quality=80, /myImage3.jpg?format=webp&width=200&height=200&rxy=0.3%2c0.3&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&rxy=0.3%2c0.3&quality=80, /myImage3.jpg?width=200&height=200&rxy=0.3%2c0.3&quality=80 2x\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\" alt=\"\" width=\"400\" height=\"400\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
         var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.jpg"], GetTestImageProfile(), new[] { (0.1, 0.1), (0.2, 0.2), (0.3, 0.3) });
@@ -95,11 +96,11 @@ public class ImageSharpTests
     public void RenderMultiImageWithEmptyFocalPointsTest()
     {
         const string expected = "<picture>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&rxy=0.1%2c0.1&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\"/>" +
-            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?format=webp&width=100&height=100&rxy=0.3%2c0.3&quality=80\" type=\"image/webp\"/>" +
-            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&rxy=0.3%2c0.3&quality=80\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?format=webp&width=400&height=400&rxy=0.1%2c0.1&quality=80, /myImage.jpg?format=webp&width=800&height=800&rxy=0.1%2c0.1&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 1200px)\" srcset=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80, /myImage.jpg?width=800&height=800&rxy=0.1%2c0.1&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 600px)\" srcset=\"/myImage2.png?width=200&height=200&quality=80, /myImage2.png?width=400&height=400&quality=80 2x\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?format=webp&width=100&height=100&rxy=0.3%2c0.3&quality=80, /myImage3.jpg?format=webp&width=200&height=200&rxy=0.3%2c0.3&quality=80 2x\" type=\"image/webp\"/>" +
+            "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.jpg?width=100&height=100&rxy=0.3%2c0.3&quality=80, /myImage3.jpg?width=200&height=200&rxy=0.3%2c0.3&quality=80 2x\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&rxy=0.1%2c0.1&quality=80\" alt=\"\" width=\"400\" height=\"400\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
         var result = Picture.Render(["/myImage.jpg", "/myImage2.png", "/myImage3.jpg"], GetTestImageProfile(), new[] { (0.1, 0.1), default, (0.3, 0.3) });

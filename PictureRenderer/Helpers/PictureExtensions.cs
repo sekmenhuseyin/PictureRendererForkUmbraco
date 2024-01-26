@@ -21,13 +21,7 @@ public static class PictureExtensions
 
     internal static MediaImagesPictureData GetMultiImagePictureData(this PictureProfile profile, string[] imagePaths, string altText, (double x, double y)[]? focalPoints, string cssClass)
     {
-        if (profile.MultiImageMediaConditions == null || profile.MultiImageMediaConditions.Length == 0)
-        {
-            throw new ArgumentException("MultiImageMediaConditions must be defined in Picture profile when rendering multiple images.");
-        }
-
         focalPoints ??= Array.Empty<(double x, double y)>();
-
         Uri fallbackImageUri = default!;
         (double x, double y) fallbackImageFocalPoint = default;
         var numberOfImages = imagePaths.Length;
@@ -44,8 +38,10 @@ public static class PictureExtensions
             var imageUri = imagePath.GetUriFromPath();
             mediaImagePaths.Add(new MediaImagePaths
             {
-                ImagePath = imageUri.BuildImageUrl(profile, profile.MultiImageMediaConditions[i].Width, profile.MultiImageMediaConditions[i].Height, null, imageFocalPoint),
-                ImagePathWebp = imageUri.ShouldRenderWebp(profile) ? imageUri.BuildImageUrl(profile, profile.MultiImageMediaConditions[i].Width, profile.MultiImageMediaConditions[i].Height, ImageFormat.Webp, imageFocalPoint) : string.Empty,
+                ImagePath = imageUri.BuildImageUrl(profile, profile.MultiImageMediaConditions[i].Width, profile.MultiImageMediaConditions[i].Height, null, imageFocalPoint, true),
+                ImagePathWebp = imageUri.ShouldRenderWebp(profile) ?
+                    imageUri.BuildImageUrl(profile, profile.MultiImageMediaConditions[i].Width, profile.MultiImageMediaConditions[i].Height, ImageFormat.Webp, imageFocalPoint, true)
+                    : string.Empty,
                 MediaCondition = profile.MultiImageMediaConditions[i].MediaQuery
             });
 

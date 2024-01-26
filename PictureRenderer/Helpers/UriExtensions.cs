@@ -2,7 +2,7 @@
 
 public static class UriExtensions
 {
-    internal static string BuildImageUrl(this Uri uri, PictureProfile profile, int imageWidth, int imageHeight, string wantedFormat, (double x, double y) focalPoint)
+    internal static string BuildImageUrl(this Uri uri, PictureProfile profile, int imageWidth, int imageHeight, string wantedFormat, (double x, double y) focalPoint, bool addDouble = false)
     {
         var queryItems = HttpUtility.ParseQueryString(uri.Query);
 
@@ -17,7 +17,15 @@ public static class UriExtensions
         queryItems = AddFocalPointQuery(focalPoint, queryItems);
         queryItems = profile.AddQualityQuery(queryItems);
 
-        return uri.GetImageDomain() + uri.AbsolutePath + "?" + queryItems;
+        var result = uri.GetImageDomain() + uri.AbsolutePath + "?" + queryItems;
+
+        if (addDouble)
+        {
+            var doubleQueryItems = BuildImageUrl(uri, profile, imageWidth * 2, imageHeight * 2, wantedFormat, focalPoint);
+            result += ", " + doubleQueryItems + " 2x";
+        }
+
+        return result;
     }
 
     internal static string BuildSrcSet(this Uri imageUrl, PictureProfile profile, string wantedFormat, (double x, double y) focalPoint)
