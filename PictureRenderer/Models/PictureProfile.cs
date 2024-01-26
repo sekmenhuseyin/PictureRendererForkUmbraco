@@ -1,9 +1,16 @@
-﻿namespace PictureRenderer.Profiles;
+﻿// ReSharper disable once CheckNamespace
+namespace PictureRenderer;
 
-public abstract class PictureProfileBase
+public class PictureProfile
 {
     private int _fallBackWidth;
     private int _fallBackHeight;
+
+    /// <summary>
+    /// The image formats that should be offered as webp versions.
+    /// PictureRenderer.ImageFormat.Jpeg is added by default.
+    /// </summary>
+    public string[] CreateWebpForFormat { get; set; } = [ImageFormat.Jpeg, ImageFormat.Png];
 
     public int[] SrcSetWidths { get; set; }
     public string[] Sizes { get; set; }
@@ -16,7 +23,7 @@ public abstract class PictureProfileBase
     /// <summary>
     /// Default value is 80.
     /// </summary>
-    public int? Quality { get; set; }
+    public int? Quality { get; set; } = 80;
 
 
     /// <summary>

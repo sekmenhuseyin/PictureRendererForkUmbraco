@@ -2,13 +2,8 @@
 
 public static class UriExtensions
 {
-    internal static string BuildImageUrl(this Uri uri, PictureProfileBase profile, int imageWidth, int imageHeight, string? wantedFormat, (double x, double y) focalPoint)
+    internal static string BuildImageUrl(this Uri uri, PictureProfile profile, int imageWidth, int imageHeight, string wantedFormat, (double x, double y) focalPoint)
     {
-        if (profile is not ImageSharpProfile)
-        {
-            return string.Empty;
-        }
-
         var queryItems = HttpUtility.ParseQueryString(uri.Query);
 
         if (!string.IsNullOrEmpty(wantedFormat))
@@ -35,7 +30,7 @@ public static class UriExtensions
         return uri.GetImageDomain() + uri.AbsolutePath + "?" + queryItems;
     }
 
-    internal static string BuildSrcSet(this Uri imageUrl, PictureProfileBase profile, string wantedFormat, (double x, double y) focalPoint)
+    internal static string BuildSrcSet(this Uri imageUrl, PictureProfile profile, string wantedFormat, (double x, double y) focalPoint)
     {
         var srcSetBuilder = new StringBuilder();
         foreach (var width in profile.SrcSetWidths!)
@@ -58,18 +53,13 @@ public static class UriExtensions
         return domain;
     }
 
-    internal static bool ShouldRenderWebp(this Uri imageUri, PictureProfileBase profile)
+    internal static bool ShouldRenderWebp(this Uri imageUri, PictureProfile profile)
     {
-        if (profile is not ImageSharpProfile imageSharpProfile)
-        {
-            return false;
-        }
-
         var originalFormat = imageUri.AbsolutePath.GetFormatFromExtension();
-        return imageSharpProfile.CreateWebpForFormat != null && imageSharpProfile.CreateWebpForFormat.Contains(originalFormat);
+        return profile.CreateWebpForFormat != null && profile.CreateWebpForFormat.Contains(originalFormat);
     }
 
-    internal static int GetImageHeight(int imageWidth, int imageHeight, PictureProfileBase profile)
+    internal static int GetImageHeight(int imageWidth, int imageHeight, PictureProfile profile)
     {
         //Add height based on aspect ratio, or from FixedHeight.
         if (imageHeight > 0)

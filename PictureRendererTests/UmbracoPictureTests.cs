@@ -11,7 +11,7 @@ public class UmbracoPictureTests
         var altText = string.Empty;
         var lazyLoading = LazyLoading.Browser;
         var cssClass = string.Empty;
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
 
         // Act
         var result = helper.Picture(mediaWithCrops, profile, altText, lazyLoading, cssClass);
@@ -29,7 +29,7 @@ public class UmbracoPictureTests
         var altText = "alt text";
         var lazyLoading = LazyLoading.Browser;
         var cssClass = string.Empty;
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
 
         // Act
         var result = helper.Picture(mediaWithCrops, profile, altText, lazyLoading, cssClass);
@@ -47,7 +47,7 @@ public class UmbracoPictureTests
         var altText = string.Empty;
         var lazyLoading = LazyLoading.None;
         var cssClass = string.Empty;
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
 
         // Act
         var result = helper.Picture(mediaWithCrops, profile, altText, lazyLoading, cssClass);

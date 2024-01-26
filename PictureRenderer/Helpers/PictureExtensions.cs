@@ -2,7 +2,7 @@
 
 public static class PictureExtensions
 {
-    internal static PictureData GetPictureData(this PictureProfileBase profile, string imagePath, string altText, (double x, double y) focalPoint, string cssClass)
+    internal static PictureData GetPictureData(this PictureProfile profile, string imagePath, string altText, (double x, double y) focalPoint, string cssClass)
     {
         if (profile.SrcSetWidths == null || profile.Sizes == null)
         {
@@ -28,7 +28,7 @@ public static class PictureExtensions
         return pData;
     }
 
-    internal static MediaImagesPictureData GetMultiImagePictureData(this PictureProfileBase profile, string[] imagePaths, string altText, (double x, double y)[]? focalPoints, string cssClass)
+    internal static MediaImagesPictureData GetMultiImagePictureData(this PictureProfile profile, string[] imagePaths, string altText, (double x, double y)[]? focalPoints, string cssClass)
     {
         if (profile.MultiImageMediaConditions == null || profile.MultiImageMediaConditions.Length == 0)
         {
@@ -77,7 +77,7 @@ public static class PictureExtensions
         return pData;
     }
 
-    internal static string RenderImgElement(this PictureProfileBase profile, PictureData pictureData, LazyLoading lazyLoading)
+    internal static string RenderImgElement(this PictureProfile profile, PictureData pictureData, LazyLoading lazyLoading)
     {
         var widthAndHeightAttributes = GetImgWidthAndHeightAttributes(profile);
         var loadingAttribute = lazyLoading == LazyLoading.Browser ? "loading=\"lazy\" " : string.Empty;
@@ -88,7 +88,7 @@ public static class PictureExtensions
         return $"<img src=\"{pictureData.ImgSrc}\" alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}/>";
     }
 
-    internal static NameValueCollection AddQualityQuery(this PictureProfileBase profile, NameValueCollection queryItems)
+    internal static NameValueCollection AddQualityQuery(this PictureProfile profile, NameValueCollection queryItems)
     {
         if (queryItems["quality"] == null)
         {
@@ -109,7 +109,7 @@ public static class PictureExtensions
         return queryItems;
     }
 
-    internal static string GetImgWidthAndHeightAttributes(this PictureProfileBase profile)
+    internal static string GetImgWidthAndHeightAttributes(this PictureProfile profile)
     {
         if (!profile.ImgWidthHeight)
         {

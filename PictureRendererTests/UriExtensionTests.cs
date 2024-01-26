@@ -7,7 +7,7 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 0;
         var wantedFormat = string.Empty;
@@ -25,7 +25,7 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 200;
         var wantedFormat = string.Empty;
@@ -43,7 +43,7 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 200;
         var wantedFormat = "webp";
@@ -61,7 +61,7 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 200;
         var wantedFormat = "webp";
@@ -145,7 +145,7 @@ public class UriExtensionTests
         // Arrange
         var imageWidth = 100;
         var imageHeight = 200;
-        var profile = new ImageSharpProfile();
+        var profile = new PictureProfile();
 
         // Act
         var result = UriExtensions.GetImageHeight(imageWidth, imageHeight, profile);
@@ -160,7 +160,7 @@ public class UriExtensionTests
         // Arrange
         var imageWidth = 100;
         var imageHeight = 0;
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             AspectRatio = 1
         };
@@ -178,7 +178,7 @@ public class UriExtensionTests
         // Arrange
         var imageWidth = 100;
         var imageHeight = 0;
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             FixedHeight = 57
         };

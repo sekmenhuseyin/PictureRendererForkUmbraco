@@ -14,7 +14,7 @@ public class ImageSharpTests
                 "sizes=\"(max-width: 980px) calc((100vw - 40px)), (max-width: 1200px) 368px, 750px\" />" +
             "<img src=\"/myImage.jpg?width=1500&height=844&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [375, 750, 980, 1500],
             Sizes = ["(max-width: 980px) calc((100vw - 40px))", "(max-width: 1200px) 368px", "750px"],
@@ -56,7 +56,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=300&quality=80\" alt=\"alt text\" width=\"300\" height=\"300\" loading=\"lazy\" decoding=\"auto\" class=\"my-css-class\"/>" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -80,7 +80,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=300&quality=80\" alt=\"alt text\" width=\"300\" height=\"300\" loading=\"lazy\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -103,7 +103,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=300&quality=80\" alt=\"alt text\" width=\"300\" height=\"300\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -125,7 +125,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=300&quality=80\" alt=\"alt text\" width=\"300\" height=\"300\" loading=\"lazy\" decoding=\"async\" fetchPriority=\"auto\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -147,7 +147,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=300&quality=80\" alt=\"alt text\" width=\"300\" height=\"300\" loading=\"lazy\" decoding=\"async\" fetchPriority=\"high\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -169,7 +169,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=150&quality=80 150w, /myImage.jpg?width=300&height=300&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=300&quality=80\" alt=\"alt text\" width=\"300\" height=\"300\" loading=\"lazy\" decoding=\"async\" fetchPriority=\"low\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -191,7 +191,7 @@ public class ImageSharpTests
             "<source srcset=\"/myImage.jpg?width=150&height=100&quality=80 150w, /myImage.jpg?width=300&height=100&quality=80 300w\" sizes=\"150px\" />" +
             "<img src=\"/myImage.jpg?width=300&height=100&quality=80\" alt=\"alt text\" width=\"300\" height=\"100\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             SrcSetWidths = [150, 300],
             Sizes = ["150px"],
@@ -232,7 +232,7 @@ public class ImageSharpTests
             "<source media=\"(min-width: 300px)\" srcset=\"/myImage3.gif?width=100&height=100&quality=80\"/>" +
             "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"\" loading=\"lazy\" decoding=\"async\" />" +
         "</picture>";
-        var profile = new ImageSharpProfile
+        var profile = new PictureProfile
         {
             MultiImageMediaConditions =
             [
@@ -398,10 +398,10 @@ public class ImageSharpTests
         Assert.Contains("<img", result);
     }
 
-    private static ImageSharpProfile GetTestImageProfile()
+    private static PictureProfile GetTestImageProfile()
     {
         //use this to test with both single and multiple images
-        return new ImageSharpProfile
+        return new PictureProfile
         {
             MultiImageMediaConditions =
             [
