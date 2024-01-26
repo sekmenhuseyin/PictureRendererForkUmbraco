@@ -10,5 +10,6 @@ global using Microsoft.AspNetCore.Html;
 global using Microsoft.AspNetCore.Mvc.Rendering;
 global using PictureRenderer.Helpers;
 global using PictureRenderer.Profiles;
+global using Umbraco.Cms.Core;
 global using Umbraco.Cms.Core.Models;
 global using Umbraco.Cms.Core.PropertyEditors.ValueConverters;

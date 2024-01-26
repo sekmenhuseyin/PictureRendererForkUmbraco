@@ -20,7 +20,7 @@ public static class UmbracoPicture
             return Picture(helper, mediaWithCrops.LocalCrops, profile, altText, lazyLoading);
         }
 
-        return Picture(helper, (ImageCropperValue)mediaWithCrops.Content.GetProperty("umbracofile")?.GetValue(), profile, altText, lazyLoading, cssClass);
+        return Picture(helper, (ImageCropperValue)mediaWithCrops.Content.GetProperty(Constants.Conventions.Media.File)?.GetValue(), profile, altText, lazyLoading, cssClass);
     }
 
     /// <summary>
@@ -40,14 +40,10 @@ public static class UmbracoPicture
             focalPoint.y = decimal.ToDouble(imageCropper.FocalPoint.Top);
         }
 
-        if (profile.MultiImageMediaConditions?.Length == null)
-        {
-            return new HtmlString(PictureRenderer.Picture.Render(imageCropper.Src!, profile, altText, lazyLoading, focalPoint, cssClass));
-        }
+        var imageSources = profile.MultiImageMediaConditions.Select(_ => imageCropper.Src!).ToArray();
+        var focalPoints = profile.MultiImageMediaConditions.Select(_ => focalPoint).ToArray();
 
-        var imageSources = profile.MultiImageMediaConditions!.Select(_ => imageCropper.Src!).ToArray();
-        var focalPoints = profile.MultiImageMediaConditions!.Select(_ => focalPoint).ToArray();
-
-        return new HtmlString(PictureRenderer.Picture.Render(imageSources, profile, altText, lazyLoading, focalPoints, cssClass));
+        var pictureData = PictureRenderer.Picture.Render(imageSources, profile, altText, lazyLoading, focalPoints, cssClass);
+        return new HtmlString(pictureData);
     }
 }

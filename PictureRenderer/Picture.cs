@@ -51,7 +51,7 @@ internal static class Picture
     /// <summary>
     /// Render picture element.
     /// </summary>
-    internal static string Render(string imagePath, PictureProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y) focalPoint = default, string cssClass = "")
+    public static string Render(string imagePath, PictureProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y) focalPoint = default, string cssClass = "")
     {
         var pictureData = profile.GetPictureData(imagePath, altText, focalPoint, cssClass);
            
@@ -72,7 +72,7 @@ internal static class Picture
     /// <summary>
     /// Render different images in the same picture element.
     /// </summary>
-    internal static string Render(string[] imagePaths, PictureProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y)[] focalPoints = null, string cssClass = "")
+    public static string Render(string[] imagePaths, PictureProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, (double x, double y)[] focalPoints = null, string cssClass = "")
     {
         var pictureData = profile.GetMultiImagePictureData(imagePaths, altText, focalPoints, cssClass);
         var sourceElements = pictureData.RenderSourceElementsForMultiImage();

@@ -20,6 +20,17 @@ public static class UriExtensions
         return uri.GetImageDomain() + uri.AbsolutePath + "?" + queryItems;
     }
 
+    internal static string BuildSrcSet(this Uri imageUrl, PictureProfile profile, string wantedFormat, (double x, double y) focalPoint)
+    {
+        var srcSetBuilder = new StringBuilder();
+        foreach (var media in profile.MultiImageMediaConditions)
+        {
+            srcSetBuilder.Append(BuildImageUrl(imageUrl, profile, media.Width, media.Height, wantedFormat, focalPoint) + " " + media.Width + "w, ");
+        }
+
+        return srcSetBuilder.ToString().TrimEnd(',', ' ');
+    }
+
     internal static string GetImageDomain(this Uri uri)
     {
         var domain = string.Empty;

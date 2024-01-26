@@ -11,6 +11,9 @@ public static class PictureExtensions
             AltText = altText,
             ImgSrc = uri.BuildImageUrl(profile, profile.ImageWidth, profile.ImageHeight, string.Empty, focalPoint),
             CssClass = cssClass,
+            SrcSet = uri.BuildSrcSet(profile, string.Empty, focalPoint),
+            SizesAttribute = string.Join(", ", profile.MultiImageMediaConditions.Select(m => m.MediaQuery)),
+            SrcSetWebp = uri.BuildSrcSet(profile, ImageFormat.Webp, focalPoint)
         };
 
         return pData;

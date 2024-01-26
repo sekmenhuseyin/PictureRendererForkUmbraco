@@ -3,6 +3,26 @@
 public class ImageSharpTests
 {
     [Fact]
+    public void RenderSingleImageTest()
+    {
+        const string expected = "<picture>" +
+            "<source srcset=\"/myImage.jpg?format=webp&width=400&height=400&quality=80 400w, " +
+                            "/myImage.jpg?format=webp&width=200&height=200&quality=80 200w, " +
+                            "/myImage.jpg?format=webp&width=100&height=100&quality=80 100w\" " +
+                    "sizes=\"(min-width: 1200px), (min-width: 600px), (min-width: 300px)\" " +
+                    "type=\"image/webp\"/>" +
+            "<source srcset=\"/myImage.jpg?width=400&height=400&quality=80 400w, " +
+                            "/myImage.jpg?width=200&height=200&quality=80 200w, " +
+                            "/myImage.jpg?width=100&height=100&quality=80 100w\" " +
+                    "sizes=\"(min-width: 1200px), (min-width: 600px), (min-width: 300px)\" />" +
+            "<img src=\"/myImage.jpg?width=400&height=400&quality=80\" alt=\"\" width=\"400\" height=\"400\" loading=\"lazy\" decoding=\"async\" />" +
+        "</picture>";
+        var result = Picture.Render("/myImage.jpg", GetTestImageProfile());
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
     public void RenderMultiImageTest()
     {
         const string expected = "<picture>" +
