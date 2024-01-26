@@ -7,17 +7,16 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 0;
         var wantedFormat = string.Empty;
         var focalPoint = (0.0, 0.0);
 
         // Act
-        var result = uri.BuildImageUrl(profile, imageWidth, imageHeight, wantedFormat, focalPoint);
+        var result = uri.BuildImageUrl(Constants.Profile, imageWidth, imageHeight, wantedFormat, focalPoint);
 
         // Assert
-        Assert.Equal("/image.jpg?width=100&quality=80", result);
+        Assert.Equal("/image.jpg?width=100&height=0&quality=80", result);
     }
 
     [Fact]
@@ -25,14 +24,13 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 200;
         var wantedFormat = string.Empty;
         var focalPoint = (0.0, 0.0);
 
         // Act
-        var result = uri.BuildImageUrl(profile, imageWidth, imageHeight, wantedFormat, focalPoint);
+        var result = uri.BuildImageUrl(Constants.Profile, imageWidth, imageHeight, wantedFormat, focalPoint);
 
         // Assert
         Assert.Equal("/image.jpg?width=100&height=200&quality=80", result);
@@ -43,14 +41,13 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 200;
         var wantedFormat = "webp";
         var focalPoint = (0.0, 0.0);
 
         // Act
-        var result = uri.BuildImageUrl(profile, imageWidth, imageHeight, wantedFormat, focalPoint);
+        var result = uri.BuildImageUrl(Constants.Profile, imageWidth, imageHeight, wantedFormat, focalPoint);
 
         // Assert
         Assert.Equal("/image.jpg?format=webp&width=100&height=200&quality=80", result);
@@ -61,14 +58,13 @@ public class UriExtensionTests
     {
         // Arrange
         var uri = new Uri("https://dummy-xyz.com/image.jpg");
-        var profile = new PictureProfile();
         var imageWidth = 100;
         var imageHeight = 200;
         var wantedFormat = "webp";
         var focalPoint = (0.5, 0.5);
 
         // Act
-        var result = uri.BuildImageUrl(profile, imageWidth, imageHeight, wantedFormat, focalPoint);
+        var result = uri.BuildImageUrl(Constants.Profile, imageWidth, imageHeight, wantedFormat, focalPoint);
 
         // Assert
         Assert.Equal("/image.jpg?format=webp&width=100&height=200&rxy=0.5%2c0.5&quality=80", result);
@@ -137,56 +133,5 @@ public class UriExtensionTests
 
         // Assert
         Assert.Equal("0.5,0.5", result["rxy"]);
-    }
-
-    [Fact]
-    public void GetImageHeight_Returns_Image_Height()
-    {
-        // Arrange
-        var imageWidth = 100;
-        var imageHeight = 200;
-        var profile = new PictureProfile();
-
-        // Act
-        var result = UriExtensions.GetImageHeight(imageWidth, imageHeight, profile);
-
-        // Assert
-        Assert.Equal(200, result);
-    }
-
-    [Fact]
-    public void GetImageHeight_Returns_Image_Height_With_Aspect_Ratio()
-    {
-        // Arrange
-        var imageWidth = 100;
-        var imageHeight = 0;
-        var profile = new PictureProfile
-        {
-            AspectRatio = 1
-        };
-
-        // Act
-        var result = UriExtensions.GetImageHeight(imageWidth, imageHeight, profile);
-
-        // Assert
-        Assert.Equal(100, result);
-    }
-
-    [Fact]
-    public void GetImageHeight_Returns_Image_Height_With_FixedHeight()
-    {
-        // Arrange
-        var imageWidth = 100;
-        var imageHeight = 0;
-        var profile = new PictureProfile
-        {
-            FixedHeight = 57
-        };
-
-        // Act
-        var result = UriExtensions.GetImageHeight(imageWidth, imageHeight, profile);
-
-        // Assert
-        Assert.Equal(57, result);
     }
 }

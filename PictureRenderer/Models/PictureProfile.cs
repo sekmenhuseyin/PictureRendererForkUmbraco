@@ -1,83 +1,30 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace PictureRenderer;
 
-public class PictureProfile
+/// <summary>
+/// Create a simple picture profile to render responsive images.
+/// </summary>
+/// <param name="MultiImageMediaConditions">Use this to show different images depending on media condition (for example different image for mobile sized screen and desktop sized screen)</param>
+/// <param name="ImageWidth">Image width for browsers without support for picture element</param>
+/// <param name="ImageHeight">Image height for browsers without support for picture element</param>
+/// <param name="FetchPriority">Img element fetchPriority attribute</param>
+/// <param name="ImageDecoding">Img element decoding attribute</param>
+public record PictureProfile(
+    MediaCondition[] MultiImageMediaConditions,
+    int ImageWidth,
+    int ImageHeight,
+    FetchPriority FetchPriority = FetchPriority.Low,
+    ImageDecoding ImageDecoding = ImageDecoding.Async
+)
 {
-    private int _fallBackWidth;
-    private int _fallBackHeight;
-
     /// <summary>
     /// The image formats that should be offered as webp versions.
     /// PictureRenderer.ImageFormat.Jpeg is added by default.
     /// </summary>
-    public string[] CreateWebpForFormat { get; set; } = [ImageFormat.Jpeg, ImageFormat.Png];
-
-    public int[] SrcSetWidths { get; set; }
-    public string[] Sizes { get; set; }
-
-    /// <summary>
-    /// Use this when you want to show different images depending on media condition (for example different image for mobile sized screen and desktop sized screen).
-    /// </summary>
-    public MediaCondition[] MultiImageMediaConditions { get; set; }
+    public string[] CreateWebpForFormat { get; init; } = [ImageFormat.Jpeg, ImageFormat.Png];
 
     /// <summary>
     /// Default value is 80.
     /// </summary>
-    public int? Quality { get; set; } = 80;
-
-
-    /// <summary>
-    /// Image width for browsers without support for picture element. Will use the largest image if not set.
-    /// </summary>
-    public int ImageWidth
-    {
-        get
-        {
-            return _fallBackWidth switch
-            {
-                0 when MultiImageMediaConditions != null => MultiImageMediaConditions.MaxBy(mcw => mcw.Width)?.Width ?? default,
-                0 when SrcSetWidths != null => SrcSetWidths.Max(),
-                _ => _fallBackWidth
-            };
-        }
-        set => _fallBackWidth = value;
-    }
-
-    /// <summary>
-    ///     Image height for browsers without support for picture element. Will use the largest image if not set.
-    /// </summary>
-    public int ImageHeight
-    {
-        get { return _fallBackHeight == default && MultiImageMediaConditions != null
-            ? MultiImageMediaConditions.MaxBy(mcw => mcw.Height)?.Height ?? default
-            : _fallBackHeight;
-        }
-        set => _fallBackHeight = value;
-    }
-
-    /// <summary>
-    /// The wanted aspect ratio of the image (width/height).
-    /// Example: An image with aspect ratio 16:9 = 16/9 = 1.777.
-    /// </summary>
-    public double AspectRatio { get; set; }
-
-    /// <summary>
-    /// Set a fixed height for all image sizes. Overrides the aspect ratio setting.  
-    /// </summary>
-    public int? FixedHeight { get; set; }
-
-    /// <summary>
-    /// If true, width and height attributes will be rendered on the img element.
-    /// </summary>
-    public bool ImgWidthHeight { get; set; } = true;
-
-    /// <summary>
-    /// Img element decoding attribute.
-    /// </summary>
-    public ImageDecoding ImageDecoding {get; set;} = ImageDecoding.Async;
-
-    /// <summary>
-    /// Img element fetchPriority attribute.
-    /// </summary>
-    public FetchPriority FetchPriority {get; set;} = FetchPriority.Low;
+    public int Quality { get; init; } = 80;
 }

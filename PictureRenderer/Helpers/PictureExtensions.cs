@@ -4,11 +4,6 @@ public static class PictureExtensions
 {
     internal static PictureData GetPictureData(this PictureProfile profile, string imagePath, string altText, (double x, double y) focalPoint, string cssClass)
     {
-        if (profile.SrcSetWidths == null || profile.Sizes == null)
-        {
-            throw new ArgumentException("SrcSetWidths and/or Sizes are not defined in Picture profile.");
-        }
-
         var uri = imagePath.GetUriFromPath();
 
         var pData = new PictureData
@@ -16,14 +11,7 @@ public static class PictureExtensions
             AltText = altText,
             ImgSrc = uri.BuildImageUrl(profile, profile.ImageWidth, profile.ImageHeight, string.Empty, focalPoint),
             CssClass = cssClass,
-            SrcSet = uri.BuildSrcSet(profile, string.Empty, focalPoint),
-            SizesAttribute = string.Join(", ", profile.Sizes)
         };
-
-        if (uri.ShouldRenderWebp(profile))
-        {
-            pData.SrcSetWebp = uri.BuildSrcSet(profile, ImageFormat.Webp, focalPoint);
-        }
 
         return pData;
     }
@@ -55,7 +43,7 @@ public static class PictureExtensions
             {
                 ImagePath = imageUri.BuildImageUrl(profile, profile.MultiImageMediaConditions[i].Width, profile.MultiImageMediaConditions[i].Height, null, imageFocalPoint),
                 ImagePathWebp = imageUri.ShouldRenderWebp(profile) ? imageUri.BuildImageUrl(profile, profile.MultiImageMediaConditions[i].Width, profile.MultiImageMediaConditions[i].Height, ImageFormat.Webp, imageFocalPoint) : string.Empty,
-                MediaCondition = profile.MultiImageMediaConditions[i].Media
+                MediaCondition = profile.MultiImageMediaConditions[i].MediaQuery
             });
 
             if (i == 0)
@@ -111,25 +99,8 @@ public static class PictureExtensions
 
     internal static string GetImgWidthAndHeightAttributes(this PictureProfile profile)
     {
-        if (!profile.ImgWidthHeight)
-        {
-            return string.Empty;
-        }
-
         var widthAttribute = $"width=\"{profile.ImageWidth}\" ";
-        var heightAttribute = "";
-        if (profile.ImageHeight > 0)
-        {
-            heightAttribute = $"height=\"{profile.ImageHeight}\" ";
-        }
-        else if (profile.AspectRatio > 0)
-        {
-            heightAttribute = $"height=\"{Math.Round(profile.ImageWidth / profile.AspectRatio)}\" ";
-        }
-        else if (profile.FixedHeight is > 0)
-        {
-            heightAttribute = $"height=\"{profile.FixedHeight}\" ";
-        }
+        var heightAttribute = $"height=\"{profile.ImageHeight}\" ";
 
         return widthAttribute + heightAttribute;
 

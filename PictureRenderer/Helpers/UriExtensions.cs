@@ -13,32 +13,11 @@ public static class UriExtensions
         }
 
         queryItems.Add("width", imageWidth.ToString());
-
-        if (queryItems["height"] == null) //add height if it's not already in the querystring.
-        {
-            var height = GetImageHeight(imageWidth, imageHeight, profile);
-            if (height > 0)
-            {
-                queryItems.Add("height", height.ToString());
-            }
-        }
-
+        queryItems.Add("height", imageHeight.ToString());
         queryItems = AddFocalPointQuery(focalPoint, queryItems);
-
         queryItems = profile.AddQualityQuery(queryItems);
 
         return uri.GetImageDomain() + uri.AbsolutePath + "?" + queryItems;
-    }
-
-    internal static string BuildSrcSet(this Uri imageUrl, PictureProfile profile, string wantedFormat, (double x, double y) focalPoint)
-    {
-        var srcSetBuilder = new StringBuilder();
-        foreach (var width in profile.SrcSetWidths!)
-        {
-            srcSetBuilder.Append(BuildImageUrl(imageUrl, profile, width, 0, wantedFormat, focalPoint) + " " + width + "w, ");
-        }
-
-        return srcSetBuilder.ToString().TrimEnd(',', ' ');
     }
 
     internal static string GetImageDomain(this Uri uri)
@@ -57,27 +36,6 @@ public static class UriExtensions
     {
         var originalFormat = imageUri.AbsolutePath.GetFormatFromExtension();
         return profile.CreateWebpForFormat != null && profile.CreateWebpForFormat.Contains(originalFormat);
-    }
-
-    internal static int GetImageHeight(int imageWidth, int imageHeight, PictureProfile profile)
-    {
-        //Add height based on aspect ratio, or from FixedHeight.
-        if (imageHeight > 0)
-        {
-            return imageHeight;
-        }
-
-        if (profile.AspectRatio > 0)
-        {
-            return Convert.ToInt32(imageWidth / profile.AspectRatio);
-        }
-
-        if (profile.FixedHeight is > 0)
-        {
-            return profile.FixedHeight.Value;
-        }
-
-        return 0;
     }
 
     internal static NameValueCollection AddFocalPointQuery((double x, double y) focalPoint, NameValueCollection queryItems)
