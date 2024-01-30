@@ -2,14 +2,18 @@
 
 public static class PictureExtensions
 {
-    internal static PictureData GetPictureData(this PictureProfile profile, string imagePath, string altText, (double x, double y) focalPoint, string cssClass)
+    internal static PictureData GetPictureData(this ImageSharpProfile profile, string imagePath, string altText, (double x, double y) focalPoint, string cssClass)
     {
         var uri = imagePath.GetUriFromPath();
+        var minWidth = profile.MultiImageMediaConditions.MinBy(m => m.Width).Width;
+        var minHeight = profile.MultiImageMediaConditions.MinBy(m => m.Height).Height;
+        var lqipProfile = profile with { Quality = 20 };
 
         var pData = new PictureData
         {
             AltText = altText,
             ImgSrc = uri.BuildImageUrl(profile, profile.ImageWidth, profile.ImageHeight, string.Empty, focalPoint),
+            ImgLqipSrc = uri.BuildImageUrl(lqipProfile, minWidth, minHeight, string.Empty, focalPoint),
             CssClass = cssClass,
             SrcSet = uri.BuildSrcSet(profile, string.Empty, focalPoint),
             SizesAttribute = string.Join(", ", profile.MultiImageMediaConditions.Select(m => m.MediaQuery)),
@@ -19,9 +23,8 @@ public static class PictureExtensions
         return pData;
     }
 
-    internal static MediaImagesPictureData GetMultiImagePictureData(this PictureProfile profile, string[] imagePaths, string altText, (double x, double y)[]? focalPoints, string cssClass)
+    internal static MediaImagesPictureData GetMultiImagePictureData(this ImageSharpProfile profile, string[] imagePaths, string altText, (double x, double y)[] focalPoints, string cssClass)
     {
-        focalPoints ??= Array.Empty<(double x, double y)>();
         Uri fallbackImageUri = default!;
         (double x, double y) fallbackImageFocalPoint = default;
         var numberOfImages = imagePaths.Length;
@@ -53,50 +56,58 @@ public static class PictureExtensions
             }
         }
 
+        var minWidth = profile.MultiImageMediaConditions.MinBy(m => m.Width).Width;
+        var minHeight = profile.MultiImageMediaConditions.MinBy(m => m.Height).Height;
+        var lqipProfile = profile with { Quality = 20 };
         var pData = new MediaImagesPictureData
         {
             MediaImages = mediaImagePaths,
             AltText = altText,
             ImgSrc = fallbackImageUri.BuildImageUrl(profile, profile.ImageWidth, profile.ImageHeight, string.Empty, fallbackImageFocalPoint),
+            ImgLqipSrc = fallbackImageUri.BuildImageUrl(lqipProfile, minWidth, minHeight, string.Empty, fallbackImageFocalPoint),
             CssClass = cssClass
         };
 
         return pData;
     }
 
-    internal static string RenderImgElement(this PictureProfile profile, PictureData pictureData, LazyLoading lazyLoading)
+    internal static string RenderImgElement(this ImageSharpProfile profile, PictureData pictureData, LazyLoading lazyLoading)
     {
         var widthAndHeightAttributes = GetImgWidthAndHeightAttributes(profile);
         var loadingAttribute = lazyLoading == LazyLoading.Browser ? "loading=\"lazy\" " : string.Empty;
         var classAttribute = string.IsNullOrEmpty(pictureData.CssClass) ? string.Empty : $"class=\"{HttpUtility.HtmlEncode(pictureData.CssClass)}\"";
         var decodingAttribute = profile.ImageDecoding == ImageDecoding.None ? string.Empty : $"decoding=\"{Enum.GetName(typeof(ImageDecoding), profile.ImageDecoding)?.ToLower()}\" ";
         var fetchPriorityAttribute = profile.FetchPriority == FetchPriority.None ? string.Empty : $"fetchPriority=\"{Enum.GetName(typeof(FetchPriority), profile.FetchPriority)?.ToLower()}\" ";
+        var imgLqipSrcAttribute = string.Empty;
 
-        return $"<img src=\"{pictureData.ImgSrc}\" alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}/>";
+        if (lazyLoading is LazyLoading.Browser)
+        {
+            imgLqipSrcAttribute = $"src=\"{pictureData.ImgLqipSrc}\" data-";
+        }
+
+        return $"<img {imgLqipSrcAttribute}src=\"{pictureData.ImgSrc}\" alt=\"{HttpUtility.HtmlEncode(pictureData.AltText)}\" {widthAndHeightAttributes}{loadingAttribute}{decodingAttribute}{fetchPriorityAttribute}{classAttribute}/>";
     }
 
-    internal static NameValueCollection AddQualityQuery(this PictureProfile profile, NameValueCollection queryItems)
+    internal static void AddQualityQuery(this NameValueCollection queryItems, int quality)
     {
         if (queryItems["quality"] == null)
         {
-            if (profile.Quality != null)
+            if (quality > 0)
             {
                 //Add quality value from profile.
-                queryItems.Add("quality", profile.Quality.ToString());
+                queryItems.Add("quality", quality.ToString());
             }
         }
         else
         {
             //Quality value already exists in querystring. Don't change it, but make sure it's last (after format).
-            var quality = queryItems["quality"];
+            var qualityValue = queryItems["quality"];
             queryItems.Remove("quality");
-            queryItems.Add("quality", quality);
+            queryItems.Add("quality", qualityValue);
         }
-
-        return queryItems;
     }
 
-    internal static string GetImgWidthAndHeightAttributes(this PictureProfile profile)
+    internal static string GetImgWidthAndHeightAttributes(this ImageSharpProfile profile)
     {
         var widthAttribute = $"width=\"{profile.ImageWidth}\" ";
         var heightAttribute = $"height=\"{profile.ImageHeight}\" ";
@@ -105,7 +116,7 @@ public static class PictureExtensions
 
     }
 
-    internal static string RenderSourceElement(this PictureData pictureData, string format = "")
+    internal static string RenderSourceElement(this PictureData pictureData, LazyLoading lazyLoading, string format = "")
     {
         var srcSet = pictureData.SrcSet;
         var formatAttribute = string.Empty;
@@ -118,10 +129,15 @@ public static class PictureExtensions
         var srcSetAttribute = $"srcset=\"{srcSet}\"";
         var sizesAttribute = $"sizes=\"{pictureData.SizesAttribute}\"";
 
+        if (lazyLoading == LazyLoading.Browser)
+        {
+            srcSetAttribute = "data-" + srcSetAttribute;
+        }
+
         return $"<source {srcSetAttribute} {sizesAttribute} {formatAttribute}/>";
     }
 
-    internal static string RenderSourceElementsForMultiImage(this MediaImagesPictureData pictureData)
+    internal static string RenderSourceElementsForMultiImage(this MediaImagesPictureData pictureData, LazyLoading lazyLoading)
     {
         var sourceElementsBuilder = new StringBuilder();
         foreach (var mediaImage in pictureData.MediaImages)
@@ -132,11 +148,23 @@ public static class PictureExtensions
             if (!string.IsNullOrEmpty(mediaImage.ImagePathWebp))
             {
                 var srcSetWebpAttribute = $"srcset=\"{mediaImage.ImagePathWebp}\"";
+
+                if (lazyLoading == LazyLoading.Browser)
+                {
+                    srcSetWebpAttribute = "data-" + srcSetWebpAttribute;
+                }
+
                 var formatAttribute = "type=\"image/webp\"";
                 sourceElementsBuilder.Append($"<source {mediaAttribute} {srcSetWebpAttribute} {formatAttribute}/>");
             }
 
             var srcSetAttribute = $"srcset=\"{mediaImage.ImagePath}\"";
+
+            if (lazyLoading == LazyLoading.Browser)
+            {
+                srcSetAttribute = "data-" + srcSetAttribute;
+            }
+
             sourceElementsBuilder.Append($"<source {mediaAttribute} {srcSetAttribute}/>");
         }
 

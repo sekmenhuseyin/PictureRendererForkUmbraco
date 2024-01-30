@@ -3,7 +3,7 @@
 
 public static class UmbracoPicture
 {
-    public static HtmlString Picture(this IHtmlHelper helper, MediaWithCrops mediaWithCrops, PictureProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, string cssClass = "")
+    public static HtmlString Picture(this IHtmlHelper helper, MediaWithCrops mediaWithCrops, ImageSharpProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, string cssClass = "")
     {
         if (mediaWithCrops == null)
         {
@@ -26,7 +26,7 @@ public static class UmbracoPicture
     /// <summary>
     /// the middle man that forwards all parameters to picture renderer
     /// </summary>
-    private static HtmlString Picture(this IHtmlHelper helper, ImageCropperValue imageCropper, PictureProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, string cssClass = "")
+    private static HtmlString Picture(this IHtmlHelper helper, ImageCropperValue imageCropper, ImageSharpProfile profile, string altText = "", LazyLoading lazyLoading = LazyLoading.Browser, string cssClass = "")
     {
         if (imageCropper == null)
         {

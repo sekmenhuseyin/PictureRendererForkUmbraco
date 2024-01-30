@@ -2,7 +2,7 @@
 
 public static class Constants
 {
-    public static readonly PictureProfile Profile = new(
+    public static readonly ImageSharpProfile Profile = new(
         [
             new MediaCondition("(min-width: 1200px)", 400, 400),
             new MediaCondition("(min-width: 600px)", 200, 200),

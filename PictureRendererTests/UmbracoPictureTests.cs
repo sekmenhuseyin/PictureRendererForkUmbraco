@@ -62,7 +62,7 @@ public class UmbracoPictureTests
         var altText = string.Empty;
         var lazyLoading = LazyLoading.None;
         var cssClass = string.Empty;
-        var profile = new PictureProfile(
+        var profile = new ImageSharpProfile(
             [new MediaCondition("(min-width: 1200px)", 400, 400)],
             400,
             400);

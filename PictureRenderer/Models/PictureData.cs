@@ -1,18 +1,18 @@
-﻿// ReSharper disable PropertyCanBeMadeInitOnly.Global
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace PictureRenderer;
 
-internal class PictureData
+internal record PictureData
 {
-    public string SrcSet { get; set; }
+    public string SrcSet { get; init; }
 
-    public string SrcSetWebp { get; set; }
+    public string SrcSetWebp { get; init; }
 
-    public string SizesAttribute { get; set; }
+    public string SizesAttribute { get; init; }
 
-    public string ImgSrc { get; set; }
+    public string ImgSrc { get; init; }
+    public string ImgLqipSrc { get; init; }
 
-    public string AltText { get; set; }
+    public string AltText { get; init; }
 
-    public string CssClass { get; set; }
+    public string CssClass { get; init; }
 }

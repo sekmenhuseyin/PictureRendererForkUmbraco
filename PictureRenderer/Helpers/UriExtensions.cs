@@ -2,7 +2,7 @@
 
 public static class UriExtensions
 {
-    internal static string BuildImageUrl(this Uri uri, PictureProfile profile, int imageWidth, int imageHeight, string wantedFormat, (double x, double y) focalPoint, bool addDouble = false)
+    internal static string BuildImageUrl(this Uri uri, ImageSharpProfile profile, int imageWidth, int imageHeight, string wantedFormat, (double x, double y) focalPoint, bool addDouble = false)
     {
         var queryItems = HttpUtility.ParseQueryString(uri.Query);
 
@@ -15,7 +15,7 @@ public static class UriExtensions
         queryItems.Add("width", imageWidth.ToString());
         queryItems.Add("height", imageHeight.ToString());
         queryItems = AddFocalPointQuery(focalPoint, queryItems);
-        queryItems = profile.AddQualityQuery(queryItems);
+        queryItems.AddQualityQuery(profile.Quality);
 
         var result = uri.GetImageDomain() + uri.AbsolutePath + "?" + queryItems;
 
@@ -28,7 +28,7 @@ public static class UriExtensions
         return result;
     }
 
-    internal static string BuildSrcSet(this Uri imageUrl, PictureProfile profile, string wantedFormat, (double x, double y) focalPoint)
+    internal static string BuildSrcSet(this Uri imageUrl, ImageSharpProfile profile, string wantedFormat, (double x, double y) focalPoint)
     {
         var srcSetBuilder = new StringBuilder();
         foreach (var media in profile.MultiImageMediaConditions)
@@ -51,7 +51,7 @@ public static class UriExtensions
         return domain;
     }
 
-    internal static bool ShouldRenderWebp(this Uri imageUri, PictureProfile profile)
+    internal static bool ShouldRenderWebp(this Uri imageUri, ImageSharpProfile profile)
     {
         var originalFormat = imageUri.AbsolutePath.GetFormatFromExtension();
         return profile.CreateWebpForFormat != null && profile.CreateWebpForFormat.Contains(originalFormat);

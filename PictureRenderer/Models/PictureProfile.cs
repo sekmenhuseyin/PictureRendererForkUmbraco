@@ -9,7 +9,7 @@ namespace PictureRenderer;
 /// <param name="ImageHeight">Image height for browsers without support for picture element</param>
 /// <param name="FetchPriority">Img element fetchPriority attribute</param>
 /// <param name="ImageDecoding">Img element decoding attribute</param>
-public record PictureProfile(
+public record ImageSharpProfile(
     MediaCondition[] MultiImageMediaConditions,
     int ImageWidth,
     int ImageHeight,

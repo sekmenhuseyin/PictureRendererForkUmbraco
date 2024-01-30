@@ -23,12 +23,13 @@ public static class StringExtensions
 
         //A Uri object must have a domain, but imagePath might be just a path. Add dummy domain, and test again.
         imagePath = "https://dummy-xyz.com" + imagePath;
-        if (!IsValidHttpUri(imagePath, out uri))
+        if (IsValidHttpUri(imagePath, out uri))
         {
-            throw new ArgumentException($"Image url '{imagePath}' is not well formatted.");
+            return uri;
         }
 
-        return uri;
+        throw new ArgumentException($"Image url '{imagePath}' is not well formatted.");
+
     }
 
     internal static bool IsValidHttpUri(this string uriString, out Uri uri)

@@ -1,8 +1,7 @@
-﻿// ReSharper disable PropertyCanBeMadeInitOnly.Global
-// ReSharper disable once CheckNamespace
+﻿// ReSharper disable once CheckNamespace
 namespace PictureRenderer;
 
-internal class MediaImagesPictureData : PictureData
+internal record MediaImagesPictureData : PictureData
 {
-    public IEnumerable<MediaImagePaths> MediaImages { get; set; }
+    public IEnumerable<MediaImagePaths> MediaImages { get; init; }
 }
