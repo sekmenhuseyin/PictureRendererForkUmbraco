@@ -1,0 +1,24 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "AlternatePackageNames": [ "PictureRenderer" ],
+  "AuthorDetails": {
+    "Name": "Erik Henningson",
+    "Description": "Umbraco MVP, CMS and documentation contributor",
+    "Url": "https://github.com/ErikHen",
+    "Contributors": [
+      {
+        "Name": "Erik Henningson",
+        "Url": "https://github.com/ErikHen"
+      },
+      {
+        "Name": "Hüseyin Sekmenoğlu",
+        "Url": "https://github.com/sekmenhuseyin"
+      }
+    ]
+  },
+  "Category": "Developer Tools",
+  "IssueTrackerUrl": "https://github.com/sekmenhuseyin/PictureRenderer/issues",
+  "LicenseTypes": [ "Free" ],
+  "PackageType": "PictureRenderer",
+  "Tags": [ "Responsive Images", "Responsive", "Image", "Images", "Picture", "Lazy Load" ]
+}

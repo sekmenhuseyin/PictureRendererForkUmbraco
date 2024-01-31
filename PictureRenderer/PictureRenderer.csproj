@@ -1,33 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<TargetFramework>net8.0</TargetFramework>
-    <Version>3.11</Version>
-    <Authors>Erik Henningson</Authors>
-    <Company />
-    <Product />
-    <PackageIcon>picture_icon.png</PackageIcon>
-    <PackageIconUrl />
-    <PackageProjectUrl>https://github.com/ErikHen/PictureRenderer</PackageProjectUrl>
-    <PackageTags>Picture;element Responsive ImageSharp Storyblok Cloudflare Webp</PackageTags>
-    <Description>Simplify rendering of HTML picture element. With support for responsive, lazy loaded images in the most optimal format. Works with Storyblok Image Service, Cloudflare Image Resizing, and ImageSharp (used by for example Umbraco CMS and Optimizely CMS).</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Version>3.20</Version>
+		<Authors>Erik Henningson, Hüseyin Sekmenoğlu</Authors>
+		<Company />
+		<Product />
+		<PackageIcon>picture_icon.png</PackageIcon>
+		<PackageIconUrl />
+		<PackageProjectUrl>https://github.com/sekmenhuseyin/PictureRenderer</PackageProjectUrl>
+		<PackageTags>umbraco plugin package images responsive picture imagesharp Webp umbraco-marketplace</PackageTags>
+		<Description>Simplify rendering of HTML picture element. With support for responsive, lazy loaded images in the most optimal format. Works only with Umbraco and ImageSharp</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Title>Picture Renderer Fork For Umbraco</Title>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/sekmenhuseyin/PictureRenderer</RepositoryUrl>
+		<PackageId>$(AssemblyName)ForkUmbraco</PackageId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="_Build\picture_icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="_Build\picture_icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.3"/>
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="PictureRenderer.Tests"/>
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-  </ItemGroup>
+	<ItemGroup>
+		<InternalsVisibleTo Include="PictureRenderer.Tests" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+	</ItemGroup>
 
- </Project>
+</Project>
