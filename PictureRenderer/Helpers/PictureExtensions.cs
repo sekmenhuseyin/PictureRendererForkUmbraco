@@ -131,7 +131,7 @@ public static class PictureExtensions
 
         if (lazyLoading == LazyLoading.Browser)
         {
-            srcSetAttribute = "data-" + srcSetAttribute;
+            srcSetAttribute = $"data-src=\"{srcSet}\" data-" + srcSetAttribute;
         }
 
         return $"<source {srcSetAttribute} {sizesAttribute} {formatAttribute}/>";
@@ -151,7 +151,7 @@ public static class PictureExtensions
 
                 if (lazyLoading == LazyLoading.Browser)
                 {
-                    srcSetWebpAttribute = "data-" + srcSetWebpAttribute;
+                    srcSetWebpAttribute = $"data-src=\"{mediaImage.ImagePathWebp}\" data-" + srcSetWebpAttribute;
                 }
 
                 var formatAttribute = "type=\"image/webp\"";
@@ -162,7 +162,7 @@ public static class PictureExtensions
 
             if (lazyLoading == LazyLoading.Browser)
             {
-                srcSetAttribute = "data-" + srcSetAttribute;
+                srcSetAttribute = $"data-src=\"{mediaImage.ImagePath}\" data-" + srcSetAttribute;
             }
 
             sourceElementsBuilder.Append($"<source {mediaAttribute} {srcSetAttribute}/>");
