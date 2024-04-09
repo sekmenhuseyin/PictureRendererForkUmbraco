@@ -30,7 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Umbraco.Cms.Web.Website" Version="13.0.3" />
+		<PackageReference Include="Umbraco.Cms.Web.Website" Version="13.2.2" />
 	</ItemGroup>
 
 	<ItemGroup>
